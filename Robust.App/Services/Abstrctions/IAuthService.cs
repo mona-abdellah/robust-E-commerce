@@ -11,6 +11,6 @@ namespace Robust.App.Services.Abstrctions
     {
         Task<AuthResponceDTO> RegisterAsync(RegisterDTO registerDto);
         Task<AuthResponceDTO> LoginAsync(LoginDTO loginDto);
-        Task<AuthResponceDTO> RefreshTokenAsync(string refreshToken);
+        Task<AuthResponceDTO> RefreshTokenAsync(string token,string refreshToken);
     }
 }

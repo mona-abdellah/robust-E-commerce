@@ -5,6 +5,8 @@ using Robust.DTO.Products;
 
 namespace Robust.API.Controllers
 {
+    [Route("api/Product")]
+    [ApiController]
     public class ProductController : Controller
     {
         private readonly IProductService productService;
@@ -12,10 +14,7 @@ namespace Robust.API.Controllers
         {
             productService = _productService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+       
         [HttpPost("CreateProduct")]
         public async Task<IActionResult> Create(ProductDTO productDTO)
         {

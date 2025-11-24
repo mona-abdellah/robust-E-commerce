@@ -15,10 +15,12 @@ namespace Robust.App.Services.Implementation
     public class ProductService : IProductService
     {
         private readonly IProductRepo productRepo;
+        private readonly ICategoryRepo categoryRepo;
         private readonly IMapper mapper;
-        public ProductService(IProductRepo _productRepo,IMapper _mapper)
+        public ProductService(IProductRepo _productRepo,IMapper _mapper,ICategoryRepo _categoryRepo)
         {
             productRepo = _productRepo;
+            categoryRepo = _categoryRepo;
             mapper = _mapper;
         }
         public async Task<ResultView<ProductDTO>> CreateAsync(ProductDTO entity)
@@ -26,6 +28,16 @@ namespace Robust.App.Services.Implementation
             ResultView<ProductDTO> result = new();
             try
             {
+                var category = await categoryRepo.GetOneAsync(entity.CategoryId);
+                if (category == null)
+                {
+                    return new ResultView<ProductDTO>
+                    {
+                        ISSuccess = false,
+                        Message = "Invalid CategoryId — Category does not exist",
+                        Entity = null
+                    };
+                }
                 var product = (await productRepo.GetAllAsync(p => p.Name == entity.Name)).FirstOrDefault();
                 if (product != null)
                 {
@@ -91,7 +103,7 @@ namespace Robust.App.Services.Implementation
         public async Task<Pagintion<GetProductDTO>> GetAllAsync(int PageNumber, int PageSize)
         {
             var Count = (await productRepo.GetAllAsync(p => p.IsActive == true)).Count();
-            var products = (await productRepo.GetAllAsync(p => p.IsActive == true)).Order()
+            var products = (await productRepo.GetAllAsync(p => p.IsActive == true)).OrderBy(p=>p.CreatedDate)
                 .Skip(PageSize * (PageNumber - 1)).Take(PageSize).ToList();
             var tempData = mapper.Map<List<GetProductDTO>>(products);
             var data = new Pagintion<GetProductDTO>()
@@ -126,12 +138,14 @@ namespace Robust.App.Services.Implementation
                         Message = "Product Not Found or Deleted"
                     };
                     return result;
-                }
+                }   
                
                 mapper.Map(entity, existing);
-                var updated = await productRepo.UpdateAsync(existing);
+                await productRepo.UpdateAsync(existing);
                 await productRepo.SaveChangesAsync();
-                var pro = mapper.Map<ProductDTO>(updated);
+
+                var updatedProduct = await productRepo.GetOneAsync(existing.Id);
+                var pro = mapper.Map<ProductDTO>(updatedProduct);
                 result = new()
                 {
                     Entity = pro,

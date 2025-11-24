@@ -11,8 +11,10 @@ namespace Robust.Infrastructure
 {
     public class OrderItemRepo : GenericRepository<OrderItem, int>, IOrderItem
     {
+        private readonly RobustContext robustContext;
         public OrderItemRepo(RobustContext _robustContext) : base(_robustContext)
         {
+            robustContext=_robustContext;
         }
     }
 }

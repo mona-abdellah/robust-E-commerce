@@ -3,6 +3,7 @@ using Robust.DTO.Category;
 using Robust.DTO.Order;
 using Robust.DTO.OrderItem;
 using Robust.DTO.Products;
+using Robust.DTO.User;
 using Robust.Models;
 using System;
 using System.Collections.Generic;
@@ -24,6 +25,9 @@ namespace Robust.App.Mapper
             CreateMap<GetOrderDTO, Order>().ReverseMap();
             CreateMap<OrderItemDTO, OrderItem>().ReverseMap();
             CreateMap<GetOrderItemDTO, OrderItem>().ReverseMap();
+            CreateMap<RegisterDTO,User>().ReverseMap();
+            CreateMap<LoginDTO,User>().ReverseMap();
+            CreateMap<AuthResponceDTO, User>().ReverseMap();
         }
     }
 }

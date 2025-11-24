@@ -5,6 +5,8 @@ using Robust.Models;
 
 namespace Robust.API.Controllers
 {
+    [Route("api/Category")]
+    [ApiController]
     public class CategoryController : Controller
     {
         private readonly ICategoryService categoryService;
@@ -12,10 +14,7 @@ namespace Robust.API.Controllers
         {
             categoryService = _categoryService;
         }
-        public IActionResult Index()
-        {
-            return View();
-        }
+     
         [HttpPost("CreateCategory")]
         public async Task<IActionResult> Create(CategoryDTO categoryDTO)
         {

@@ -11,6 +11,7 @@ namespace Robust.App.Contracts
     {
         public Task<User> Login(User user);
         public Task<User> Register(User user);
+        public Task<User> GetByEmailAsync(string email);
 
     }
 }

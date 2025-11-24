@@ -18,6 +18,10 @@ namespace Robust.Infrastructure
             robustContext = _robustContext;
         }
 
+        public async Task<User> GetByEmailAsync(string email)
+        {
+            return await robustContext.Users.FindAsync(email);
+        }
         public async Task<User> Login(User user)
         {
             var existingUser = await robustContext.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
@@ -30,9 +34,7 @@ namespace Robust.Infrastructure
         public async Task<User> Register(User user)
         {
             user.Role = Role.customer; 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
-            user.CreatedDate = DateTime.UtcNow;
-
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);           
             await robustContext.Users.AddAsync(user);
             await robustContext.SaveChangesAsync();
             return user;
